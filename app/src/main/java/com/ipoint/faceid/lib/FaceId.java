@@ -2,6 +2,7 @@ package com.ipoint.faceid.lib;
 
 import android.content.Context;
 import android.util.Base64;
+import android.util.Log;
 
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -86,7 +87,7 @@ public class FaceId {
     public void getPersonId(byte[] image, final PersonIdCallback callback) {
         JSONObject params = new JSONObject();
         try {
-            params.put("image", Base64.encode(image, Base64.DEFAULT));
+            params.put("image", new String(Base64.encode(image, Base64.DEFAULT)));
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -106,7 +107,13 @@ public class FaceId {
     }
 
     public void getPersonInfo(String personId, final PersonInfoCallback callback) {
-        GetPersonInfoCall call = new GetPersonInfoCall(token, null, DEFAULT_SERVER_URL +
+        JSONObject params = new JSONObject();
+        try {
+            params.put("stub", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        GetPersonInfoCall call = new GetPersonInfoCall(token, params, DEFAULT_SERVER_URL +
                 GET_PERSON_INFO + personId, queue, new AbstractFaceIdCall.Callback() {
             @Override
             public void onSuccess(AbstractFaceIdCall.CallResult result) {
@@ -127,7 +134,7 @@ public class FaceId {
         try {
             int index = 0;
             for (byte[] image : images) {
-                array.put(index, Base64.encode(image, Base64.DEFAULT));
+                array.put(index, new String(Base64.encode(image, Base64.DEFAULT)));
                 index++;
             }
             params.put("images", array);
@@ -167,7 +174,13 @@ public class FaceId {
     }
 
     public void retrain(final RetrainCallback callback) {
-        RetrainCall call = new RetrainCall(token, null, DEFAULT_SERVER_URL +
+        JSONObject params = new JSONObject();
+        try {
+            params.put("stub", "");
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        RetrainCall call = new RetrainCall(token, params, DEFAULT_SERVER_URL +
                 RETRAIN, queue, new AbstractFaceIdCall.Callback() {
             @Override
             public void onSuccess(AbstractFaceIdCall.CallResult result) {
